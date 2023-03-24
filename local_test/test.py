@@ -125,7 +125,7 @@ def send_offline_devices_email():
             message = MIMEMultipart('alternative')
             message['Subject'] = 'Current Offline Devices'
             message['From'] = 'Modjoul Device Script'
-            message['To'] = ','.join(recipients)
+            message['To'] = ','.join(coles_recipients)
 
             message.attach(MIMEText(f"The following devices are offline: \r\n {pretty_coles_offline_devices}"))
 
@@ -137,8 +137,12 @@ def send_offline_devices_email():
             )
             server.quit()
             print('Email Sent!')
-        except:
-            print('There was an error sending the email')
+        # except:
+        #     print('There was an error sending the email')
+        except Exception as e:
+            import traceback
+            print('There was an error sending the email:')
+            print(traceback.format_exc())
 
 
     else:

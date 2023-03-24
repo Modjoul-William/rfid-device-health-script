@@ -123,7 +123,7 @@ def lambda_handler(event,context):
                 message = MIMEMultipart('alternative')
                 message['Subject'] = 'Current Offline Devices'
                 message['From'] = 'Modjoul Device Script'
-                message['To'] = ','.join(recipients)
+                message['To'] = ','.join(coles_recipients)
 
                 message.attach(MIMEText(f"The following devices are offline: \r\n {pretty_coles_offline_devices}"))
 
