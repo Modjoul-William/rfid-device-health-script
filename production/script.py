@@ -68,26 +68,27 @@ def lambda_handler(event,context):
         }
         response = requests.request("GET", URL_DEVICE_STATUS, headers=headers )
 
-        # Filter down response result
-        top = response.json()
-        devices = top['devices']
+        # This section is a temporary workaround for the clearstream API duplicate reading issues that are occurring
 
-        # Adds a key value pair to tell when the csv sheet was made for quicksight
-        for device in devices:
+        # Read the response data into a Pandas DataFrame
+        df = pd.json_normalize(response.json()['devices'])
+
+        # Define the list of important devices
+        important_devices_list = ['IN01COLESDC', 'IN02COLESDC', 'EX01COLESDC', 'EX02COLESDC', 'IN01DVA3', 'IN02DVA3', 'EX01DVA3', 'EX02DVA3', 'IN01GVL1', 'IN02GVL1', 'EX01GVL', 'EX02GVL']
+
+        # Filter the DataFrame based on the important_devices_list
+        filtered_df = df[df['name'].isin(important_devices_list)]
+
+        # Convert the filtered DataFrame back to a list of dictionaries
+        devices_list = filtered_df.to_dict(orient='records')
+
+        # Check to see if device is offline and that it associated with the Coles location or Amzn location
+        for device in devices_list:
             device['timeaccessed'] = str(timestamp)
-
-        devices_list.append(devices)
-
-        # Check to see if device is offline and if the name ends with DVA3, 
-        # then add the name of the device to the offline_devices list
-        for device in devices:
-            if device['online'] == "" and device['name'].endswith('DVA3'):
-                offline_devices.append(device['name'])
-
-            # Check to see if devices ending in ESDC are offline
-        for device in devices:
-            if device['online'] == "" and device['name'].endswith('ESDC'):
+            if device['online'] == "" and device['name'].endswith('SDC'):
                 coles_offline_devices.append(device['name'])
+            elif device['online'] == "" and device['name'].endswith('DVA3'):
+                offline_devices.append(device['name'])
         
 
     def send_offline_devices_email():
