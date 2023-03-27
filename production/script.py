@@ -72,20 +72,22 @@ def lambda_handler(event,context):
         top = response.json()
         devices = top['devices']
 
+        filtered_devices = [device for device in devices if device.get('deviceid') != "C4:7D:CC:64:95:0F"]
+
         # Adds a key value pair to tell when the csv sheet was made for quicksight
-        for device in devices:
+        for device in filtered_devices:
             device['timeaccessed'] = str(timestamp)
 
-        devices_list.append(devices)
+        devices_list.append(filtered_devices)
 
         # Check to see if device is offline and if the name ends with DVA3, 
         # then add the name of the device to the offline_devices list
-        for device in devices:
+        for device in filtered_devices:
             if device['online'] == "" and device['name'].endswith('DVA3'):
                 offline_devices.append(device['name'])
 
-            # Check to see if devices ending in ESDC are offline
-        for device in devices:
+        # Check to see if devices ending in ESDC are offline
+        for device in filtered_devices:
             if device['online'] == "" and device['name'].endswith('ESDC'):
                 coles_offline_devices.append(device['name'])
         

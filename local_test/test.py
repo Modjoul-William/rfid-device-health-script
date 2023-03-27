@@ -95,10 +95,6 @@ def get_ClearStream_JSON_data(BEARER_TOKEN):
         if device['online'] == "" and device['name'].endswith('ESDC'):
             coles_offline_devices.append(device['name'])
 
-    print(devices)
-    print(coles_offline_devices)
-    print(offline_devices)
-
 def send_offline_devices_email():
     # If devices are down, send email listing which ones are
     pretty_offline_devices = json.dumps(offline_devices, indent=4)
