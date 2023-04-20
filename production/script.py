@@ -95,8 +95,8 @@ def lambda_handler(event,context):
         pretty_offline_devices = json.dumps(offline_devices, indent=4)
         pretty_coles_offline_devices = json.dumps(coles_offline_devices, indent=4)
 
-        recipients = [REC_EMAIL, REC_EMAIL_2, SENDER_EMAIL ]
-        coles_recipients = [REC_EMAIL_2, COLES_REC_EMAIL, SENDER_EMAIL]
+        recipients = [REC_EMAIL, SENDER_EMAIL ]
+        coles_recipients = [ REC_EMAIL, COLES_REC_EMAIL, SENDER_EMAIL]
         if offline_devices:
             print('There are devices Down')
             try:
